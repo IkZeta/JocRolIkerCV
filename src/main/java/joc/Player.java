@@ -1,0 +1,7 @@
+package joc;
+
+public abstract class Player {
+    public Player() {
+        System.out.println("He creat un personatje");
+    }
+}
