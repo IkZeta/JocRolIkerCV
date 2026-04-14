@@ -27,6 +27,21 @@ public abstract class Player {
     public int getLife() {
         return life;
     }
+    protected void setAttackPoints(int attackPoints) {
+        this.attackPoints = attackPoints;
+    }
+
+    protected void setDefensePoints(int defensePoints) {
+        this.defensePoints = defensePoints;
+    }
+
+    protected void setLife(int life) {
+        if (life < 0) {
+            this.life = 0;
+        } else {
+            this.life = life;
+        }
+    }
 
     @Override
     public String toString() {
