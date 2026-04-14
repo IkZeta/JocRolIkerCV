@@ -1,21 +1,25 @@
 package inici;
 
-import joc.*;
+import joc.Alien;
+import joc.Human;
+import joc.Warrior;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class JocDeRol {
-    public static void provaFase1(){
-        System.out.println("Creant Humà...");
-        Human h = new Human();
 
-        System.out.println("Creant Guerrer...");
-        Warrior w = new Warrior();
-
-        System.out.println("Creant Alien...");
-        Alien a = new Alien();
-    }
     public static void main(String[] args) {
-        provaFase1();
+        provaFaseV2();
+    }
+
+    public static void provaFaseV2() {
+        Human h = new Human("John Smith", 13, 8, 39);
+        Alien a = new Alien("Martian PK", 27, 2, 32);
+
+        System.out.println("// JUGADORS CREATS //");
+        System.out.println(h);
+        System.out.println(a);
+        System.out.println();
+
+        h.attack(a);
+        a.attack(h);
     }
 }
