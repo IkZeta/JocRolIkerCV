@@ -1,15 +1,19 @@
 package joc;
 
+import java.util.ArrayList;
+
 public abstract class Player {
     private String name;
     private int attackPoints;
     private int defensePoints;
     private int life;
+    private ArrayList<Team> teams;
     public Player(String name, int attackPoints, int defensePoints, int life) {
         this.name = name;
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
         this.life = life;
+        this.teams = new ArrayList<>();
         System.out.println("He creat un " + this.getClass().getSimpleName());
     }
     public String getName() {
@@ -42,10 +46,29 @@ public abstract class Player {
             this.life = life;
         }
     }
+    public void addTeam(Team t) {
+        if (t != null && !teams.contains(t)) {
+            teams.add(t);
+            if (!t.getPlayers().contains(this)) {
+                t.addPlayer(this);
+            }
+        }
+    }
+
+    public void removeTeam(Team t) {
+        if (t != null && teams.contains(t)) {
+            teams.remove(t);
+            if (t.getPlayers().contains(this)) {
+                t.removePlayer(this);
+            }
+        }
+    }
+
 
     @Override
     public String toString() {
-        return name + " PA:" + attackPoints + " / PD:" + defensePoints + " / PV:" + life;
+        return name + " PA:" + attackPoints + " / PD:" +
+                defensePoints + " / PV:" + life + " (pertany a " + teams.size() + " equips)";
     }
     public void attack(Player p) {
         System.out.println("// ABANS DE L'ATAC:");
@@ -83,6 +106,18 @@ public abstract class Player {
                         " punts i es defén amb " + this.defensePoints +
                         ". Vides: " + oldLife + " - " + damage + " = " + this.life
         );
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Player)) return false;
+
+        Player other = (Player) obj;
+
+        return this.name.equals(other.name)
+                && this.attackPoints == other.attackPoints
+                && this.defensePoints == other.defensePoints
+                && this.life == other.life;
     }
 
 }
