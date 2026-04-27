@@ -7,7 +7,7 @@ public class Warrior extends Human {
     }
     @Override
     protected void hit(int attackPoints) {
-        int damage = attackPoints - getDefensePoints();
+        int damage = attackPoints - getTotalDefensePoints();
 
         if (damage <= 5) {
             damage = 0;
@@ -18,7 +18,7 @@ public class Warrior extends Human {
 
         System.out.println(
                 getName() + " és colpejat amb " + attackPoints +
-                        " punts i es defén amb " + getDefensePoints() +
+                        " punts i es defén amb " + getTotalDefensePoints() +
                         ". Vides: " + oldLife + " - " + damage + " = " + getLife()
         );
     }

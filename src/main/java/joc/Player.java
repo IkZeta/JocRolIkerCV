@@ -3,17 +3,21 @@ package joc;
 import java.util.ArrayList;
 
 public abstract class Player {
+
     private String name;
     private int attackPoints;
     private int defensePoints;
     private int life;
     private ArrayList<Team> teams;
+    private ArrayList<Item> items;
+
     public Player(String name, int attackPoints, int defensePoints, int life) {
         this.name = name;
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
         this.life = life;
         this.teams = new ArrayList<>();
+        this.items = new ArrayList<>();
         System.out.println("He creat un " + this.getClass().getSimpleName());
     }
     public String getName() {
@@ -67,8 +71,19 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return name + " PA:" + attackPoints + " / PD:" +
-                defensePoints + " / PV:" + life + " (pertany a " + teams.size() + " equips)";
+        String text = name + " PA:" + getTotalAttackPoints()
+                + " / PD:" + getTotalDefensePoints()
+                + " / PV:" + life
+                + " (pertany a " + teams.size() + " equips)";
+
+        if (!items.isEmpty()) {
+            text += " té els ítems:\n";
+            for (Item item : items) {
+                text += item + "\n";
+            }
+        }
+
+        return text;
     }
     public void attack(Player p) {
         System.out.println("// ABANS DE L'ATAC:");
@@ -76,10 +91,10 @@ public abstract class Player {
         System.out.println("Atacat: " + p);
 
         System.out.println("// ATAC:");
-        p.hit(this.attackPoints);
+        p.hit(this.getTotalAttackPoints());
 
         if (p.life > 0) {
-            this.hit(p.attackPoints);
+            this.hit(p.getTotalAttackPoints());
         }
 
         System.out.println("// DESPRÉS DE L'ATAC:");
@@ -88,7 +103,8 @@ public abstract class Player {
         System.out.println();
     }
     protected void hit(int attackPoints) {
-        int damage = attackPoints - this.defensePoints;
+        int defense = getTotalDefensePoints();
+        int damage = attackPoints - defense;
 
         if (damage < 0) {
             damage = 0;
@@ -103,7 +119,7 @@ public abstract class Player {
 
         System.out.println(
                 this.name + " és colpejat amb " + attackPoints +
-                        " punts i es defén amb " + this.defensePoints +
+                        " punts i es defén amb " + defense +
                         ". Vides: " + oldLife + " - " + damage + " = " + this.life
         );
     }
@@ -118,6 +134,36 @@ public abstract class Player {
                 && this.attackPoints == other.attackPoints
                 && this.defensePoints == other.defensePoints
                 && this.life == other.life;
+    }
+
+    public void addItem(Item item) {
+        if (item != null && !items.contains(item)) {
+            items.add(item);
+        }
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public int getTotalAttackPoints() {
+        int total = attackPoints;
+
+        for (Item item : items) {
+            total += item.getAttackBonus();
+        }
+
+        return total;
+    }
+
+    public int getTotalDefensePoints() {
+        int total = defensePoints;
+
+        for (Item item : items) {
+            total += item.getDefenseBonus();
+        }
+
+        return total;
     }
 
 }
