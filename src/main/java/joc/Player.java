@@ -35,6 +35,11 @@ public abstract class Player {
     public int getLife() {
         return life;
     }
+
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
     protected void setAttackPoints(int attackPoints) {
         this.attackPoints = attackPoints;
     }
@@ -50,21 +55,35 @@ public abstract class Player {
             this.life = life;
         }
     }
-    public void addTeam(Team t) {
-        if (t != null && !teams.contains(t)) {
-            teams.add(t);
-            if (!t.getPlayers().contains(this)) {
-                t.addPlayer(this);
-            }
+    public void addTeam(Team t) throws JocException {
+        if (t == null) {
+            throw new JocException("L'equip no existeix.");
+        }
+
+        if (teams.contains(t)) {
+            throw new JocException("Un jugador no pot pertànyer dues vegades al mateix equip.");
+        }
+
+        teams.add(t);
+
+        if (!t.getPlayers().contains(this)) {
+            t.addPlayer(this);
         }
     }
 
-    public void removeTeam(Team t) {
-        if (t != null && teams.contains(t)) {
-            teams.remove(t);
-            if (t.getPlayers().contains(this)) {
-                t.removePlayer(this);
-            }
+    public void removeTeam(Team t) throws JocException {
+        if (t == null) {
+            throw new JocException("L'equip no existeix.");
+        }
+
+        if (!teams.contains(t)) {
+            throw new JocException("El jugador no pertany a eixe equip.");
+        }
+
+        teams.remove(t);
+
+        if (t.getPlayers().contains(this)) {
+            t.removePlayer(this);
         }
     }
 
@@ -85,7 +104,18 @@ public abstract class Player {
 
         return text;
     }
-    public void attack(Player p) {
+    public void attack(Player p) throws JocException{
+        if (this.getLife() <= 0) {
+            throw new JocException("Un jugador mort no pot atacar.");
+        }
+
+        if (p.getLife() <= 0) {
+            throw new JocException("Un jugador mort no pot ser atacat.");
+        }
+
+        if (this == p) {
+            throw new JocException("Un jugador no pot atacar-se a ell mateix.");
+        }
         System.out.println("// ABANS DE L'ATAC:");
         System.out.println("Atacant: " + this);
         System.out.println("Atacat: " + p);
@@ -130,10 +160,7 @@ public abstract class Player {
 
         Player other = (Player) obj;
 
-        return this.name.equals(other.name)
-                && this.attackPoints == other.attackPoints
-                && this.defensePoints == other.defensePoints
-                && this.life == other.life;
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     public void addItem(Item item) {

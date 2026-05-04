@@ -20,16 +20,34 @@ public class Team {
         return players;
     }
 
-    public void addPlayer(Player p) {
-        if (p != null && !players.contains(p)) {
-            players.add(p);
+    public void addPlayer(Player p) throws JocException {
+        if (p == null) {
+            throw new JocException("El jugador no existeix.");
+        }
+
+        if (players.contains(p)) {
+            throw new JocException("L'equip no pot tindre jugadors repetits.");
+        }
+
+        players.add(p);
+
+        if (!p.getTeams().contains(this)) {
             p.addTeam(this);
         }
     }
 
-    public void removePlayer(Player p) {
-        if (p != null && players.contains(p)) {
-            players.remove(p);
+    public void removePlayer(Player p) throws JocException {
+        if (p == null) {
+            throw new JocException("El jugador no existeix.");
+        }
+
+        if (!players.contains(p)) {
+            throw new JocException("No podem llevar d'un equip a un jugador que no li pertany.");
+        }
+
+        players.remove(p);
+
+        if (p.getTeams().contains(this)) {
             p.removeTeam(this);
         }
     }
@@ -52,7 +70,6 @@ public class Team {
 
         Team other = (Team) obj;
 
-        if (!this.name.equals(other.name)) return false;
-        return this.players.equals(other.players);
+        return this.name.equalsIgnoreCase(other.name);
     }
 }

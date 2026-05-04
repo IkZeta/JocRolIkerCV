@@ -6,7 +6,7 @@ public class Alien extends Player {
         super(name, attackPoints, defensePoints, life);
     }
     @Override
-    public void attack(Player p) {
+    public void attack(Player p) throws JocException {
         if (getLife() > 20) {
             setAttackPoints(getAttackPoints() + 3);
             setDefensePoints(getDefensePoints() - 3);
